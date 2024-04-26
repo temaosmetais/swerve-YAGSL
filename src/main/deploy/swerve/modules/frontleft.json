@@ -1,7 +1,7 @@
 {
   "location": {
-    "front": 0,
-    "left": 0
+    "front": 10.531,
+    "left": 10.531
   },
   "absoluteEncoderOffset": 0,
   "drive": {
@@ -15,7 +15,7 @@
     "canbus": null
   },
   "encoder": {
-    "type": "attached",
+    "type": "ma3",
     "id": 0,
     "canbus": null
   },

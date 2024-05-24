@@ -15,7 +15,7 @@
     "canbus": null
   },
   "encoder": {
-    "type": "none",
+    "type": "ma3",
     "id": 2,
     "canbus": null
   },

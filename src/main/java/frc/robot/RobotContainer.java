@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.core.util.oi.SmartController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -47,7 +48,7 @@ public class RobotContainer {
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY() * 0.8, OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(driverXbox.getLeftX() * 0.8, OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX() * 0.8);
+        () -> -driverXbox.getRightX() * 0.5);
     
      AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
      () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
@@ -61,6 +62,7 @@ public class RobotContainer {
      driverXbox.getXButton(),
      driverXbox.getBButton());
      
+     AbsoluteDrive absoluteDrive = new AbsoluteDrive(drivebase, () -> driverXbox.getLeftX(), () -> driverXbox.getLeftY(), () -> driverXbox.getRightX(), () -> driverXbox.getRightY());
     // Applies deadbands and inverts controls because joysticks
     // are back-right positive while robot
     // controls are front-left positive
@@ -128,7 +130,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Auto");
+    return drivebase.getAutonomousCommand("New New Auto");
   }
 
   public void setDriveMode() {

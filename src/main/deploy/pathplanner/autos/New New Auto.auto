@@ -5,16 +5,22 @@
       "x": 1.0,
       "y": 6.1
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Curva"
+            "pathName": "New New Path"
           }
         }
       ]

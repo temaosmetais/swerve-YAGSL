@@ -46,9 +46,9 @@ public class RobotContainer {
     configureBindings();
 
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY() * 0.8, OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX() * 0.8, OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverXbox.getRightX() * 0.5);
+        () -> -MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> -MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> -driverXbox.getRightX() * 0.8);
     
      AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
      () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
@@ -71,9 +71,9 @@ public class RobotContainer {
 
     
      Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-     () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
+     () -> MathUtil.applyDeadband(driverXbox.getLeftY()  * 0.8,
      OperatorConstants.LEFT_Y_DEADBAND),
-     () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+     () -> MathUtil.applyDeadband(driverXbox.getLeftX() * 0.8,
      OperatorConstants.LEFT_X_DEADBAND),
      () -> driverXbox.getRightX(),
      () -> driverXbox.getRightY());
@@ -82,13 +82,13 @@ public class RobotContainer {
     // are back-right positive while robot
     // controls are front-left positive
     // left stick controls translation
-    // right stick controls the angular velocity of the robot
+    // right stick controls the angular velocity of the 8robot
 
     
      Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
      () -> MathUtil.applyDeadband(driverXbox.getLeftY() * 0.8,
      OperatorConstants.LEFT_Y_DEADBAND),
-     () -> MathUtil.applyDeadband(driverXbox.getLeftX(),
+     () -> MathUtil.applyDeadband(driverXbox.getLeftX() * 0.8,
      OperatorConstants.LEFT_X_DEADBAND),
      () -> driverXbox.getRightX());
      
@@ -115,7 +115,7 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     driverXbox.whileAButton((Commands.runOnce(drivebase::zeroGyro)));
-    //driverXbox.whileXButton(Commands.runOnce(drivebase::addFakeVisionReading));
+    driverXbox.whileXButton(Commands.runOnce(drivebase::addFakeVisionReading));
     driverXbox.whileBButton(
         Commands.deferredProxy(() -> drivebase.driveToPose(
             new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
@@ -131,7 +131,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return drivebase.getAutonomousCommand("New New Auto");
-  }
+  } 	
 
   public void setDriveMode() {
     //drivebase.setDefaultCommand();

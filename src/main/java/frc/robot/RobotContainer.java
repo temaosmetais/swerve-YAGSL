@@ -46,8 +46,8 @@ public class RobotContainer {
     configureBindings();
 
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> -MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> -MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> -MathUtil.applyDeadband((driverXbox.getLeftY()*0.7), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> -MathUtil.applyDeadband((driverXbox.getLeftX()*0.7), OperatorConstants.LEFT_X_DEADBAND),
         () -> -driverXbox.getRightX() * 0.8);
     
      AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
@@ -71,9 +71,9 @@ public class RobotContainer {
 
     
      Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-     () -> MathUtil.applyDeadband(driverXbox.getLeftY()  * 0.8,
+     () -> MathUtil.applyDeadband(driverXbox.getLeftY()  * 1,
      OperatorConstants.LEFT_Y_DEADBAND),
-     () -> MathUtil.applyDeadband(driverXbox.getLeftX() * 0.8,
+     () -> MathUtil.applyDeadband(driverXbox.getLeftX() * 1,
      OperatorConstants.LEFT_X_DEADBAND),
      () -> driverXbox.getRightX(),
      () -> driverXbox.getRightY());
@@ -130,7 +130,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New New Auto");
+    return drivebase.getAutonomousCommand("autoarthur");
   } 	
 
   public void setDriveMode() {

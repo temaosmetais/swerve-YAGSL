@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,8 +17,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.core.util.oi.SmartController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.swervedrive.IntakeJointAscend;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.subsystems.IntakeJointSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -32,6 +35,7 @@ import java.io.File;
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
+  private final IntakeJointSubsystem m_IntakeJointSubsystem;
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
       "swerve"));
 
@@ -42,13 +46,16 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    m_IntakeJointSubsystem = new IntakeJointSubsystem();
     // Configure the trigger bindings
     configureBindings();
+    //drivebase.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
 
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> -MathUtil.applyDeadband((driverXbox.getLeftY()*0.7), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> -MathUtil.applyDeadband((driverXbox.getLeftX()*0.7), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverXbox.getRightX() * 0.8);
+        () -> -MathUtil.applyDeadband((driverXbox.getLeftY() * 0.8), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> -MathUtil.applyDeadband((driverXbox.getLeftX() * 0.8), OperatorConstants.LEFT_X_DEADBAND),
+        () -> -driverXbox.getRightX()*0.8);
     
      AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
      () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
@@ -121,6 +128,8 @@ public class RobotContainer {
             new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
     driverXbox.whileXButton(Commands.runOnce(drivebase::lock,
     drivebase).repeatedly());
+    driverXbox.whileRightBumper(new IntakeJointAscend(m_IntakeJointSubsystem));
+    driverXbox.whileLeftBumper(new IntakeJointDescend(m_IntakeJointSubsystem));
   }
 
   /**

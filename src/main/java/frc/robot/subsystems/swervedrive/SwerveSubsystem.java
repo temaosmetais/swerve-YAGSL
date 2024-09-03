@@ -49,7 +49,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
-  public double maximumSpeed = Units.feetToMeters(6);
+  public double maximumSpeedMetersPerSecond = Units.feetToMeters(6);
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -77,10 +77,11 @@ public class SwerveSubsystem extends SubsystemBase {
     // objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try {
-      swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed);
+      swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeedMetersPerSecond);
+      //swerveDrive.setMaximumSpeed(0.5);
       // Alternative method if you don't want to supply the conversion factor via JSON
       // files.
-      // swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed,
+      // swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeedMetersPerSecond,
       // angleConversionFactor, driveConversionFactor);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -100,7 +101,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param controllerCfg Swerve Controller.
    */
   public SwerveSubsystem(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
-    swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
+    swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeedMetersPerSecond);
   }
 
   /**
@@ -443,7 +444,7 @@ public class SwerveSubsystem extends SubsystemBase {
         headingX,
         headingY,
         getHeading().getRadians(),
-        maximumSpeed);
+        maximumSpeedMetersPerSecond);
   }
 
   /**
@@ -463,7 +464,7 @@ public class SwerveSubsystem extends SubsystemBase {
         yInput,
         angle.getRadians(),
         getHeading().getRadians(),
-        maximumSpeed);
+        maximumSpeedMetersPerSecond);
   }
 
   /**

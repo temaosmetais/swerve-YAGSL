@@ -5,10 +5,11 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class IntakeJointSubsystem extends SubsystemBase {
-  VictorSPX leftMotor = new VictorSPX(8);
-  VictorSPX rightMotor = new VictorSPX(9);
+  VictorSPX leftMotor = new VictorSPX(Constants.IntakeJointConstants.LEFT_MOTOR);
+  VictorSPX rightMotor = new VictorSPX(Constants.IntakeJointConstants.RIGHT_MOTOR);
 
   public IntakeJointSubsystem() {}
 

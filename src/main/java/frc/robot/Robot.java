@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -122,6 +123,9 @@ public class Robot extends LoggedRobot {
       m_robotContainer.setMotorBrake(false);
       disabledTimer.stop();
     }
+
+    boolean isBlueAlliance = RobotContainer.ally.get() == Alliance.Blue;
+    RobotContainer.allianceChooser.setBoolean(isBlueAlliance);
   }
 
   /**

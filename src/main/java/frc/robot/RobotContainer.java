@@ -9,8 +9,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -18,11 +24,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.core.util.oi.SmartController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.IntakeJointAscend;
+import frc.robot.commands.swervedrive.IntakeJointDescend;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.IntakeJointSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.util.Map;
+import java.util.Optional;
+
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -33,6 +44,12 @@ import java.io.File;
  * trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+  // Auto Chooser
+  public static Optional<Alliance> ally = DriverStation.getAlliance();
+  private static SendableChooser<Command> RedAllianceChooser;
+  private static SendableChooser<Command> BlueAllianceChooser;
+  public static GenericEntry allianceChooser;
 
   // The robot's subsystems and commands are defined here...
   private final IntakeJointSubsystem m_IntakeJointSubsystem;
@@ -52,10 +69,30 @@ public class RobotContainer {
     configureBindings();
     //drivebase.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
 
+    // Add 2 more choosers to distingue between RED and BLUE alliances' auto commands
+    // Auto Chooser
+
+    allianceChooser = Shuffleboard.getTab("Autonomous")
+   .add("IsBlueAlliance", ally.get() == Alliance.Blue)
+   .withWidget("Boolean Box")
+   .withProperties(Map.of("colorWhenTrue", "blue", "colorWhenFalse", "red"))
+   .getEntry();
+
+    RedAllianceChooser = new SendableChooser<Command>();
+    RedAllianceChooser.setDefaultOption("AutoArthur", drivebase.getAutonomousCommand("autoarthur"));
+    RedAllianceChooser.addOption("Curva", drivebase.getAutonomousCommand("curvaa"));
+
+    BlueAllianceChooser = new SendableChooser<Command>();
+    BlueAllianceChooser.setDefaultOption("AutoArthur", drivebase.getAutonomousCommand("autoarthur"));
+    BlueAllianceChooser.addOption("Curva", drivebase.getAutonomousCommand("curvaa"));
+
+    Shuffleboard.getTab("Autonomous").add("RedAllianceChooser", RedAllianceChooser);
+    Shuffleboard.getTab("Autonomous").add("BlueAllianceChooser", BlueAllianceChooser);
+
     Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> -MathUtil.applyDeadband((driverXbox.getLeftY() * 0.8), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> -MathUtil.applyDeadband((driverXbox.getLeftX() * 0.8), OperatorConstants.LEFT_X_DEADBAND),
-        () -> -driverXbox.getRightX()*0.8);
+        () -> -MathUtil.applyDeadband((driverXbox.getLeftY() * Constants.HIDConstants.LEFT_Y_AXIS_MODIFIER), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> -MathUtil.applyDeadband((driverXbox.getLeftX() * Constants.HIDConstants.LEFT_X_AXIS_MODIFIER), OperatorConstants.LEFT_X_DEADBAND),
+        () -> -driverXbox.getRightX() * Constants.HIDConstants.RIGHT_X_AXIS_MODIFIER);
     
      AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
      () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
@@ -139,7 +176,16 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("autoarthur");
+    if (ally.isPresent()) {
+      if (ally.get() == Alliance.Red) {
+          return RedAllianceChooser.getSelected();
+      } else {
+          return BlueAllianceChooser.getSelected();
+      }
+    }
+    else {
+      return RedAllianceChooser.getSelected();
+    }
   } 	
 
   public void setDriveMode() {
@@ -149,4 +195,5 @@ public class RobotContainer {
   public void setMotorBrake(boolean brake) {
     drivebase.setMotorBrake(brake);
   }
+
 }

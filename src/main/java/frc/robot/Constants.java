@@ -29,7 +29,7 @@ public final class Constants
   {
 
     public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-    public static final PIDConstants ANGLE_PID   = new PIDConstants(0.4, 0, 0.01);
+    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
   }
 
   public static final class DrivebaseConstants
@@ -47,5 +47,22 @@ public final class Constants
     public static final double LEFT_Y_DEADBAND  = 0.2;
     public static final double RIGHT_X_DEADBAND = 0.2;
     public static final double TURN_CONSTANT    = 6;
+  }
+
+  public static class IntakeJointConstants 
+  {
+
+    public static final int RIGHT_MOTOR = 8;
+    public static final int LEFT_MOTOR  = 9;
+  }
+
+  public static class HIDConstants 
+  {
+
+    // Velocity modifiers
+    public static final double LEFT_X_AXIS_MODIFIER  = 0.7;
+    public static final double LEFT_Y_AXIS_MODIFIER  = 0.7;
+    public static final double RIGHT_X_AXIS_MODIFIER = 1;
+    public static final double RIGHT_Y_AXIS_MODIFIER = 1;
   }
 }
